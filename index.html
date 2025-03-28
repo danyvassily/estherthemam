@@ -1,4 +1,1283 @@
-<link rel="icon" type="image/png" href="./favicon.png">
-<link rel="stylesheet" href="./styles/main.css">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio artistique d'Âme sur Toile, présentant des œuvres émotionnelles et uniques.">
+    <meta name="keywords" content="art, portfolio, Âme sur Toile, émotion, peinture">
+    <meta name="author" content="Âme sur Toile">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Portfolio Artistique - Âme sur Toile">
+    <meta property="og:description" content="Portfolio artistique d'Âme sur Toile, présentant des œuvres émotionnelles et uniques.">
+    <meta property="og:type" content="website">
+    <title>Portfolio Artistique - Âme sur Toile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/styles/main.css">
+    <style>
+        .artwork-card {
+            transition: all 0.3s ease;
+        }
+        .artwork-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom right, #2d3748, #4a5568);
+        }
+        .lang-text p {
+            line-height: 1.7;
+            letter-spacing: 0.03em;
+            color: #e2e8f0;
+        }
+        .active-lang {
+            transform: scale(0.98);
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+        /* Ajout des styles pour le modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+        }
 
-<img src="./images/esther.jpg" alt="..."> 
+        .modal-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .artwork-card img {
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .artwork-card img:hover {
+            opacity: 0.8;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 16px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 1001;
+        }
+
+        .modal-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        .modal-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in-slide {
+            animation: fadeInSlide 1.2s ease-out forwards;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 font-sans antialiased">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 shadow-lg sticky top-0 z-10" role="navigation" aria-label="Navigation principale">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <h1 class="text-2xl font-bold text-white">
+                    <a href="/" class="hover:text-purple-400 transition-colors">Esther THEMAM</a>
+                </h1>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-300 hover:text-purple-400 transition-colors" aria-current="page">Accueil</a>
+                    <a href="#gallery" class="text-gray-300 hover:text-purple-400 transition-colors">Galerie</a>
+                    <a href="#contact" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-r from-gray-800 to-blue-900 py-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">PORTFOLIO CONCOURS WAC 2025</h2>
+        </div>
+    </header>
+
+    <!-- Section Présentation de l'Artiste -->
+    <section class="bg-gray-900 py-16">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-full md:w-1/2">
+                    <img src="images/esss.jpeg" 
+                         alt="Portrait artistique d'Esther THEMAM" 
+                         class="w-full h-auto rounded-lg shadow-xl animate-fade-in-slide"
+                         style="max-height: 600px; object-fit: cover;">
+                </div>
+                <div class="w-full md:w-1/2 text-center md:text-left animate-fade-in">
+                    <h3 class="text-3xl font-bold text-white mb-4">Esther THEMAM</h3>
+                    <p class="text-gray-300 text-lg leading-relaxed">
+                        Artiste passionnée explorant les profondeurs de l'émotion à travers la peinture abstraite. 
+                        Chaque toile est une fenêtre ouverte sur mon monde intérieur, une invitation à partager 
+                        un voyage émotionnel unique.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Motivation -->
+    <section class="bg-gray-800 py-16">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Sélecteur de langue -->
+            <div class="grid grid-cols-4 gap-3 mb-10 text-center max-w-md mx-auto">
+                <button data-lang="fr" class="lang-btn bg-blue-100 text-blue-800 py-2 px-1 rounded-lg font-medium hover:bg-blue-200 transition-all duration-200 text-sm sm:text-base">
+                    🇫🇷 Français
+                </button>
+                <button data-lang="ca" class="lang-btn bg-yellow-100 text-yellow-800 py-2 px-1 rounded-lg font-medium hover:bg-yellow-200 transition-all duration-200 text-sm sm:text-base">
+                    🟡 Català
+                </button>
+                <button data-lang="es" class="lang-btn bg-red-100 text-red-800 py-2 px-1 rounded-lg font-medium hover:bg-red-200 transition-all duration-200 text-sm sm:text-base">
+                    🟠 Español
+                </button>
+                <button data-lang="en" class="lang-btn bg-purple-100 text-purple-800 py-2 px-1 rounded-lg font-medium hover:bg-purple-200 transition-all duration-200 text-sm sm:text-base">
+                    🔵 English
+                </button>
+            </div>
+
+            <!-- Textes multilingues -->
+            <div class="space-y-8">
+                <!-- Version Française -->
+                <div id="fr" class="lang-text">
+    
+                    <div class="prose-lg text-gray-300 space-y-4">
+                       
+                        <p>Un rêve, un seul rêve qui n'a jamais cessé de battre depuis des années.</p>
+                        <p>Ce rêve était simplement de devenir une Artiste.</p>
+                        <p>J'ai vécu en cessant d'attendre la fin de celle-ci, la vie.<br>
+                        Des malheurs où la seule chose qui a pu m'en délivrer<br>
+                        Où mon seul échappatoire a été de lancer mes émotions sur une toile<br>
+                        Assez ironique mais bien véridique.</p>
+                        <p>Mieux qu'une thérapie et plus apaisant qu'une séance chez le psychiatre.</p>
+                        <p>Juste un morceau de tissu et un peu, beaucoup de peinture<br>
+                        Et boum, cela m'a permis de comprendre ce qu'était vivre<br>
+                        Vivre avec le sourire, les larmes, les cris<br>
+                        Enfin accepter que tout soit normal<br>
+                        C'était ça la vie.</p>
+                        <p>Exposer mes émotions<br>
+                        Faire exploser mes états d'âme<br>
+                        Exprimer mes désirs<br>
+                        Oui<br>
+                        Des toiles décorées de couleurs, écorchées de noirceur.</p>
+                        <p>La perfection n'existe pas<br>
+                        La perfection de l'imparfait<br>
+                        Qui n'est que ma seule vérité.</p>
+                        <p>Et oui, grâce à toi, l'art, je suis ici, en vie et debout tous les jours<br>
+                        Où à chaque instant devant ma toile<br>
+                        Je rentre, je bascule, je traverse un monde parallèle incroyable.</p>
+                        <p>L'art m'a sauvé sans même s'en rendre compte<br>
+                        M'a délivrée de moi-même<br>
+                        Me laissant m'écouter, m'exprimer à ma manière sans crainte du regard d'autrui.</p>
+                        <p>Alors juré, que vous aimiez ou non<br>
+                        La beauté est subjective mais j'espère une chose : que chaque toile vous fera vibrer d'émotion.</p>
+                        <p>Du dégoût ou de la joie<br>
+                        De la peine ou de l'euphorie<br>
+                        Mais juste un peu d'émotion.</p>
+                        <p>Je ne demande que ça…</p>
+                        <p>Donc avant de juger mes toiles<br>
+                        Regardez-les comme un enfant qui découvre le monde pour la première fois.</p>
+                        <p>Ne regardez pas la technique car il n'y en a pas<br>
+                        L'art n'est pas une histoire de méthode<br>
+                        L'art est une manière de parler sans réfléchir.</p>
+                        <p>Donc merci de me permettre de participer à ce concours.</p>
+                        <p>Et merci de vous immiscer dans mon monde<br>
+                        Ouvrez la porte, allez-y, n'ayez pas peur<br>
+                        À l'intérieur, rien n'est tout rose car mon monde n'est pas féerique mais il reflète une petite partie que chaque être humain a au fond de soi-même.</p>
+                        <p>Et j'espère que vous aussi, vous allez vous y reconnaître.</p>
+                    </div>
+                </div>
+
+                <!-- Version Catalane -->
+                <div id="ca" class="lang-text hidden">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">Motivació pel concurs</h3>
+                    <div class="prose-lg text-gray-600 space-y-4">
+                       
+                        <p>Un somni, un únic somni, que mai ha deixat de bategar durant anys.</p>
+                        <p>Aquest somni era, simplement, convertir-me en Artista.</p>
+                        <p>He viscut deixant d'esperar el final d'aquesta vida.<br>
+                        Desgràcies de les quals només m'ha pogut alliberar una cosa:<br>
+                        la meva única via d'escapament va ser abocar les meves emocions sobre un llenç.<br>
+                        Bastant irònic, però absolutament cert.</p>
+                        <p>Millor que una teràpia i més reconfortant que una sessió amb el psiquiatre.</p>
+                        <p>Només un tros de tela i una mica —molta— pintura,<br>
+                        i boom, això em va permetre entendre què era viure.<br>
+                        Viure amb el somriure, les llàgrimes, els crits.<br>
+                        Acceptar, finalment, que tot això és normal.<br>
+                        Això era la vida.</p>
+                        <p>Exposar les meves emocions.<br>
+                        Esclatar els meus estats d'ànim.<br>
+                        Expressar els meus desitjos.<br>
+                        Sí.<br>
+                        Llenços decorats amb colors, esquinçats per la foscor.</p>
+                        <p>La perfecció no existeix.<br>
+                        La perfecció de l'imperfecte,<br>
+                        que no és més que la meva única veritat.</p>
+                        <p>I sí, gràcies a tu, art, soc aquí, viva i dreta cada dia.<br>
+                        Perquè a cada instant davant del meu llenç,<br>
+                        entro, caic, travesso un món paral·lel increïble.</p>
+                        <p>L'art em va salvar sense ni tan sols adonar-se'n.<br>
+                        Em va alliberar de mi mateixa,<br>
+                        permetent-me escoltar-me i expressar-me a la meva manera,<br>
+                        sense por a la mirada dels altres.</p>
+                        <p>Aleshores jurat:<br>
+                        us agradi o no,<br>
+                        la bellesa és subjectiva,<br>
+                        però només espero una cosa: que cada llenç us faci vibrar d'emoció.</p>
+                        <p>Fàstic o alegria,<br>
+                        pena o eufòria...<br>
+                        Però, ni que sigui, una mica d'emoció.</p>
+                        <p>Només demano això...</p>
+                        <p>Així que, abans de jutjar les meves obres,<br>
+                        mireu-les com ho faria un nen que descobreix el món per primera vegada.</p>
+                        <p>No mireu la tècnica, perquè no n'hi ha.<br>
+                        L'art no és una qüestió de mètode.<br>
+                        L'art és una manera de parlar sense pensar.</p>
+                        <p>Gràcies per permetre'm participar en aquest concurs.</p>
+                        <p>I gràcies per endinsar-vos en el meu món.<br>
+                        Obriu la porta, endavant, no tingueu por.<br>
+                        À dins no tot és de color de rosa, perquè el meu món no és de conte de fades,<br>
+                        però reflecteix una petita part que tot ésser humà porta ben endins.</p>
+                        <p>I espero que vosaltres també us hi reconegueu.</p>
+                    </div>
+                </div>
+
+                <!-- Version Espagnole -->
+                <div id="es" class="lang-text hidden">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">Motivación para el concurso</h3>
+                    <div class="prose-lg text-gray-600 space-y-4">
+                       
+                        <p>Un sueño, un único sueño, que nunca ha dejado de latir durante años.</p>
+                        <p>Ese sueño era, simplemente, convertirme en Artista.</p>
+                        <p>He vivido dejando de esperar el final de esta vida.<br>
+                        Desgracias de las que solo me ha podido liberar una cosa:<br>
+                        mi única vía de escape fue volcar mis emociones en un lienzo.<br>
+                        Bastante irónico, pero absolutamente cierto.</p>
+                        <p>Mejor que una terapia y más reconfortante que una sesión con el psiquiatra.</p>
+                        <p>Solo un trozo de tela y un poco —mucho— de pintura,<br>
+                        y boom, eso me permitió comprender qué era vivir.<br>
+                        Vivir con la sonrisa, las lágrimas, los gritos.<br>
+                        Aceptar, por fin, que todo eso es normal.<br>
+                        Eso era la vida.</p>
+                        <p>Exponer mis emociones.<br>
+                        Explotar mis estados de ánimo.<br>
+                        Expresar mis deseos.<br>
+                        Sí.<br>
+                        Lienzos decorados de colores, desgarrados por la oscuridad.</p>
+                        <p>La perfección no existe.<br>
+                        La perfección de lo imperfecto,<br>
+                        que no es más que mi única verdad.</p>
+                        <p>Y sí, gracias a ti, arte, estoy aquí, viva y en pie cada día.<br>
+                        Porque en cada instante frente a mi lienzo,<br>
+                        entro, caigo, atravieso un mundo paralelo increíble.</p>
+                        <p>El arte me salvó sin siquiera darse cuenta.<br>
+                        Me liberó de mí misma,<br>
+                        permitiéndome escucharme y expresarme a mi manera,<br>
+                        sin miedo a la mirada de los demás.</p>
+                        <p>Entonces jurado:<br>
+                        os guste o no,<br>
+                        la belleza es subjetiva,<br>
+                        pero solo espero una cosa: que cada lienzo os haga vibrar de emoción.</p>
+                        <p>Asco o alegría,<br>
+                        pena o euforia…<br>
+                        Pero aunque sea un poco de emoción.</p>
+                        <p>Solo pido eso...</p>
+                        <p>Así que, antes de juzgar mis obras,<br>
+                        miradlas como lo haría un niño que descubre el mundo por primera vez.</p>
+                        <p>No miréis la técnica, porque no la hay.<br>
+                        El arte no es cuestión de método.<br>
+                        El arte es una forma de hablar sin pensar.</p>
+                        <p>Gracias por permitirme participar en este concurso.</p>
+                        <p>Y gracias por adentraros en mi mundo.<br>
+                        Abrid la puerta, go ahead, don't be afraid.<br>
+                        Inside, not everything is rosy — my world is no fairytale —<br>
+                        but it reflects a small part of what every human being carries deep inside.</p>
+                        <p>And I hope that you, too,<br>
+                        will recognise yourselves in it.</p>
+                    </div>
+                </div>
+
+                <!-- Version Anglaise -->
+                <div id="en" class="lang-text hidden">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">Motivation for the Contest</h3>
+                    <div class="prose-lg text-gray-600 space-y-4">
+                        
+                        <p>A dream — one single dream — that has never stopped beating over the years.</p>
+                        <p>That dream was simply to become an Artist.</p>
+                        <p>I've lived without waiting for the end of life.<br>
+                        Tragedies from which only one thing could free me:<br>
+                        my only escape was to pour my emotions onto a canvas.<br>
+                        Quite ironic, but completely true.</p>
+                        <p>Better than therapy and more soothing than a psychiatrist's session.</p>
+                        <p>Just a piece of fabric and a little — or a lot — of paint,<br>
+                        and boom, it helped me understand what it means to live.<br>
+                        To live with smiles, tears, screams.<br>
+                        To finally accept that all of it is normal.<br>
+                        That was life.</p>
+                        <p>To expose my emotions.<br>
+                        To explode my moods.<br>
+                        To express my desires.<br>
+                        Yes.<br>
+                        Canvases decorated with colour, scarred by darkness.</p>
+                        <p>Perfection doesn't exist.<br>
+                        The perfection of the imperfect —<br>
+                        that is my only truth.</p>
+                        <p>And yes, thanks to you, art, I am here, alive and standing every single day.<br>
+                        Because every time I face my canvas,<br>
+                        I enter, I fall, I cross into an incredible parallel world.</p>
+                        <p>Art saved me without even realising it.<br>
+                        It freed me from myself,<br>
+                        allowing me to listen to and express myself in my own way,<br>
+                        without fear of others' judgment.</p>
+                        <p>So jury:<br>
+                        whether you like it or not,<br>
+                        beauty is subjective,<br>
+                        but I only hope for one thing — that each painting makes you feel something.</p>
+                        <p>Disgust or joy,<br>
+                        sorrow or euphoria...<br>
+                        Just a bit of emotion.</p>
+                        <p>That's all I ask...</p>
+                        <p>So, before judging my paintings,<br>
+                        look at them like a child discovering the world for the very first time.</p>
+                        <p>Don't focus on technique — there is none.<br>
+                        Art is not about method.<br>
+                        Art is a way of speaking without thinking.</p>
+                        <p>So thank you for allowing me to take part in this competition.</p>
+                        <p>And thank you for stepping into my world.<br>
+                        Open the door, go ahead, don't be afraid.<br>
+                        Inside, not everything is rosy — my world is no fairytale —<br>
+                        but it reflects a small part of what every human being carries deep inside.</p>
+                        <p>And I hope that you, too,<br>
+                        will recognise yourselves in it.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galerie -->
+    <main id="gallery" class="max-w-7xl mx-auto px-4 py-16">
+        <h3 class="text-3xl font-bold text-white mb-12 text-center">Explosion Émotionnelle</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Œuvre ESTHER -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/esther.jpg" 
+                     alt="Visage fragmenté en noir et rouge, représentant des émotions intenses" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images='["images/esther.jpg", "images/esther2.jpg", "images/estherzz.JPG"]'
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">ESTHER</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art1" class="lang-text">
+                            <p>Toile qui représente un visage<br>
+                            Ni jolie, ni parfait<br>
+                            Visage fragmenté, des yeux pleurant de douleurs, des larmes de colères<br>
+                            Ce trop-plein d'émotions qui n'arrive pas à se contrôler<br>
+                            Mais…<br>
+                            Lèvres cousues, refusant de dialoguer sur ce mal-être profond<br>
+                            Hurlement sans cris<br>
+                            La vision d'une douleur invisible<br>
+                            La profondeur de ce regard désirant de ne plus contenir ces pleurs<br>
+                            Regardez-moi quand je pleure sans jamais me juger<br>
+                            Un visage, le mien, ou le vôtre<br>
+                            Un visage qui dit tout sans avoir besoin de rien dire</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art1" class="lang-text hidden">
+                            <p>Llenç que representa un rostre<br>
+                            Ni bonic, ni perfecte<br>
+                            Rostre fragmentat, ulls que ploren de dolor, llàgrimes de ràbia<br>
+                            Aquest excés d'emocions que no es poden controlar<br>
+                            Però…<br>
+                            Llavis cosits, que es neguen a parlar d'aquest malestar profund<br>
+                            Un crit sense so<br>
+                            La visió d'un dolor invisible<br>
+                            La profunditat d'aquesta mirada que ja no vol contenir més llàgrimes<br>
+                            Mireu-me quan ploro, sense jutjar-me mai<br>
+                            Un rostre, el meu, o el vostre<br>
+                            Un rostre que ho diu tot sense necessitat de dir res</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art1" class="lang-text hidden">
+                            <p>Lienzo que representa un rostro<br>
+                            Ni bonito, ni perfecto<br>
+                            Un rostro fragmentado, con ojos que lloran de dolor, lágrimas de rabia<br>
+                            Ese desbordamiento de emociones que no se pueden controlar<br>
+                            Pero...<br>
+                            Labios cosidos, que se niegan a hablar de ese malestar profundo<br>
+                            Un grito sin sonido<br>
+                            La imagen de un dolor invisible<br>
+                            La profundidad de esa mirada que ya no quiere contener más lágrimas<br>
+                            Mírame cuando lloro, sin juzgarme jamás<br>
+                            Un rostro, el mío, o el tuyo<br>
+                            Un rostro que lo dice todo sin necesidad de pronunciar palabra</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art1" class="lang-text hidden">
+                            <p>Canvas representing a face<br>
+                            Neither beautiful nor perfect<br>
+                            A fragmented face, eyes crying from pain, tears of anger<br>
+                            This overflow of emotions that can't be controlled<br>
+                            But…<br>
+                            Sewn lips, refusing to speak about this deep discomfort<br>
+                            A scream without sound<br>
+                            The image of an invisible pain<br>
+                            The depth of this gaze, longing not to hold back these tears any longer<br>
+                            Look at me when I cry, without ever judging me<br>
+                            A face, mine or yours<br>
+                            A face that says everything without needing to say a word</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre L'INCONNU -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/l'incconu.JPEG" 
+                     alt="Toile représentant un point d'interrogation symbolisant les questions intérieures" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/l'incconu.JPEG&quot;, &quot;images/l'inconnu2.JPEG&quot;, &quot;images/l'inconnu3.JPEG&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">L'INCONNU</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art2" class="lang-text">
+                            <p>Une toile qui fait comprendre que parfois je me pose trop de questions dans ma tête<br>
+                            Ce point d'interrogation est mon cerveau<br>
+                            Fracturé par ces lignes noires<br>
+                            Un rouge permettant de voir qu'à l'intérieur de moi, mes idées brûlent sans jamais se positionner fixement<br>
+                            Un œil au milieu perdu, au milieu de toutes ces informations envoyées à mon cerveau<br>
+                            Un cerveau complètement perdu, à la recherche des réponses les plus profondes</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art2" class="lang-text hidden">
+                            <p>Un llenç que fa entendre que, de vegades, em faig massa preguntes dins el cap<br>
+                            Aquest signe d'interrogació és el meu cervell<br>
+                            Fracturat per aquestes línies negres<br>
+                            Un vermell que deixa veure que dins meu, les meves idees cremen sense arribar mai a fixar-se<br>
+                            Un ull perdut al mig, al centre de tota aquesta informació enviada al meu cervell<br>
+                            Un cervell completament perdut, a la recerca de les respostes més profundes</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art2" class="lang-text hidden">
+                            <p>Un lienzo que transmite que, a veces, me hago demasiadas preguntas en la cabeza.<br>
+                            Ese signo de interrogación es mi cerebro,<br>
+                            fracturado por esas líneas negras.<br>
+                            Un rojo que permite ver que, en mi interior,<br>
+                            mis ideas arden sin llegar nunca a fijarse del todo.<br>
+                            Un ojo perdido en medio, en medio de toda esa información que se envía a mi cerebro.<br>
+                            Un cerebro completamente perdido,<br>
+                            en busca de las respuestas más profundas.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art2" class="lang-text hidden">
+                            <p>A canvas that reveals how, sometimes, I ask myself too many questions inside my head<br>
+                            That question mark is my brain<br>
+                            Fractured by these black lines<br>
+                            A red that shows how, inside me, my thoughts are burning without ever settling<br>
+                            An eye in the middle, lost, in the midst of all the information being sent to my brain<br>
+                            A completely lost brain, in search of the deepest answers</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre LARMES À NU -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/LARMES À NU.jpg" 
+                     alt="Regard prisonnier par des cadres" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/LARMES À NU.jpg&quot;, &quot;images/l'armes à nu2.JPEG&quot;, &quot;images/l'arme à nu3.JPEG&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">LARMES À NU</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art3" class="lang-text">
+                            <p>Regard prisonnier par des cadres où chacun représente un masque que chaque humain doit porter à l'extérieur<br>
+                            Au centre, mon œil, tremblant, saignant, où chaque bordure<br>
+                            Une protection de mon âme si pure face à ce monde<br>
+                            Monde qui nous rend si fous, où personne ne veut plus prendre la peine de gratter chaque couche afin d'arriver à l'être d'autrui<br>
+                            Préférons nous juger de loin, de l'extérieur<br>
+                            Car plus on se rapproche plus nos mal-être nous explosent à la gueule<br>
+                            Voici cette toile<br>
+                            La larme est l'œil de tous</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art3" class="lang-text hidden">
+                            <p>Mirada empresonada per marcs, on cadascun representa una màscara que cada ésser humà ha de portar a l'exterior<br>
+                            Al centre, el meu ull, tremolós, sagnant, en cada vora<br>
+                            Una protecció de la meva ànima, tan pura, davant d'aquest món<br>
+                            Un món que ens torna tan bojos, on ningú ja vol esforçar-se per gratar capa rere capa fins arribar al nu interior<br>
+                            Preferim jutjar de lluny, l'exterior<br>
+                            Perquè com més ens hi acostem, més ens esclaten a la cara els nostres malestars<br>
+                            Aquí teniu aquest llenç<br>
+                            La llàgrima és l'ull de tothom</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art3" class="lang-text hidden">
+                            <p>Una mirada prisionera de marcos, donde cada uno representa una máscara que cada ser humano debe llevar en el exterior.<br>
+                            En el centro, mi ojo, tembloroso, sangrante, en cada borde,<br>
+                            una protección de mi alma, tan pura, frente a este mundo.<br>
+                            Un mundo que nos vuelve tan locos, donde ya nadie quiere tomarse la molestia de rascar capa por capa hasta llegar al desnudo del ser.<br>
+                            Preferimos juzgar desde lejos, el exterior,<br>
+                            porque cuanto más nos acercamos, más nos estalla el malestar en la cara.<br>
+                            Aquí está este lienzo:<br>
+                            La lágrima es el ojo de todos.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art3" class="lang-text hidden">
+                            <p>A gaze trapped in frames, each one representing a mask that every human must wear on the outside<br>
+                            At the centre, my eye — trembling, bleeding — along each edge<br>
+                            A shield for my soul, so pure in the face of this world<br>
+                            A world that drives us mad, where no one wants to take the time to peel back each layer and reach true exposure<br>
+                            We prefer to judge from afar, the outside<br>
+                            Because the closer we get, the more our suffering explodes in our face<br>
+                            Here is this canvas<br>
+                            The tear is everyone's eye</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre L'INTIME -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/L'INTIME.jpg" 
+                     alt="Un besoin de dynamisme, un tourbillon de couleurs" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/L'INTIME.jpg&quot;, &quot;images/l'intime2.jpg&quot;, &quot;images/l'intime 3.JPEG&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">L'INTIME</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art5" class="lang-text">
+                            <p>Un besoin de dynamisme, un tourbillon de couleurs<br>
+                            Corps ne trouvant pas sa place, ne comprenant pas les règles de la société<br>
+                            Imparfait par des traits non structurés<br>
+                            Permettant de faire vivre ma toile tel un corps qui danse sur un tempo d'émotion</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art5" class="lang-text hidden">
+                            <p>Una necessitat de dinamisme, un remolí de colors<br>
+                            Cos que no troba el seu lloc, que no entén les regles de la societat<br>
+                            Imparfait amb traços sense estructura<br>
+                            Permetent donar vida al meu llenç com un cos que balla al ritme de l'emoció</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art5" class="lang-text hidden">
+                            <p>Una necesidad de dinamismo, un torbellino de colores.<br>
+                            Un cuerpo que no encuentra su lugar, que no comprende las reglas de la sociedad.<br>
+                            Imperfecto por trazos sin estructura,<br>
+                            que permiten dar vida a mi lienzo como un cuerpo que baila al ritmo de la emoción.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art5" class="lang-text hidden">
+                            <p>A need for dynamism, a whirlwind of colours<br>
+                            A body that doesn't find its place, that doesn't understand society's rules<br>
+                            Imperfect through unstructured lines<br>
+                            Allowing my canvas to live like a body dancing to the tempo of emotion</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre LE CRI -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/Le Cri.jpg" 
+                     alt="Griffure tel mes hurlements en moi" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/Le Cri.jpg&quot;, &quot;images/le cri2.JPEG&quot;, &quot;images/le cri 3.JPEG&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">LE CRI</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art6" class="lang-text">
+                            <p>Griffure tel mes hurlements en moi<br>
+                            Enfouissement depuis tant d'années<br>
+                            Un besoin de trouver cette paix intérieure sans savoir quelle direction prendre (le blanc)<br>
+                            Un rouge indiquant une urgence émotionnelle d'être un jour aidé, aimer, m'aimer</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art6" class="lang-text hidden">
+                            <p>Esgarrapades com els crits que duc a dins<br>
+                            Enterrades des de fa tants anys<br>
+                            Una necessitat de trobar aquella pau interior sense saber cap a on anar (el blanc)<br>
+                            Un vermell que indica una urgència emocional: la de ser ajudada algun dia, estimar, estimar-me</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art6" class="lang-text hidden">
+                            <p>Arañazos como los gritos que llevo dentro,<br>
+                            enterrados desde hace tantos años.<br>
+                            Una necesidad de encontrar esa paz interior sin saber qué camino tomar (el blanco).<br>
+                            Un rojo que indica una urgencia emocional: la de ser ayudada algún día,<br>
+                            la de amar, la de amarme.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art6" class="lang-text hidden">
+                            <p>Scratches like the screams within me<br>
+                            Buried for so many years<br>
+                            A need to find that inner peace without knowing which way to go (the white)<br>
+                            A red indicating an emotional urgency — to be helped one day, to love, to love myself</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre L'ESPÉRANCE -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/L'espérance.jpeg" 
+                     alt="Toile où chaque mouvement était le trop-plein de mes émotions" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/L'espérance.jpeg&quot;, &quot;images/esperance2.jpeg&quot;, &quot;images/esperance3.jpeg&quot;, &quot;images/esperance4.jpeg&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">L'ESPÉRANCE</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art7" class="lang-text">
+                            <p>Toile où chaque mouvement était le trop-plein de mes émotions<br>
+                            Tranchant comme ma tension à l'intérieur de mon âme<br>
+                            Coup de pinceaux rapide montrant que je suis perdue dans mon cerveau<br>
+                            Un noir toujours présent encadrant tout le reste,<br>
+                            Une froideur exprimée par ce bleu et ce rouge<br>
+                            Sans jamais oublier ma fragilité exposée par ces éclats de jaune<br>
+                            Toile où mon ange et mon démon s'affrontent pour savoir qui prendra le dessus bientôt</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art7" class="lang-text hidden">
+                            <p>Llenç on cada moviment era el desbordament de les meves emocions<br>
+                            Tallant com la tensió que porto dins l'ànima<br>
+                            Pinzellades ràpides que mostren que estic perduda dins el meu cervell<br>
+                            Un negre sempre present, emmarcant tot el que l'envolta,<br>
+                            Una fredor expressada per aquest blau i aquest vermell<br>
+                            Sense oblidar mai la meva fragilitat, exposada en aquests esclats de groc<br>
+                            Llenç on el meu àngel i el meu dimoni s'enfronten per veure qui prendrà el control ben aviat</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art7" class="lang-text hidden">
+                            <p>Lienzo donde cada movimiento era el desbordamiento de mis emociones,<br>
+                            cortante como la tensión que siento dentro de mi alma.<br>
+                            Pinceladas rápidas que muestran que estoy perdida en mi mente.<br>
+                            Un negro siempre presente, enmarcando todo lo demás.<br>
+                            Una frialdad expresada por ese azul y ese rojo,<br>
+                            sin olvidar nunca mi fragilidad, expuesta en esos destellos de amarillo.<br>
+                            Un lienzo donde mi ángel y mi demonio se enfrentan<br>
+                            para ver cuál de los dos acabará dominando.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art7" class="lang-text hidden">
+                            <p>A canvas where every movement was the overflow of my emotions<br>
+                            Sharp, like the tension within my soul<br>
+                            Quick brushstrokes showing that I am lost in my own mind<br>
+                            A black always present, framing everything else,<br>
+                            A coldness expressed through that blue and red<br>
+                            Never forgetting my fragility, exposed through those flashes of yellow<br>
+                            A canvas where my angel and my demon fight to see who will take over soon</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre LUMIÈRES FRAGILES -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/lumieres fragiles1.jpeg" 
+                     alt="Fond lumineux, d'une douceur tel un rayon de soleil en plein hiver" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/lumieres fragiles1.jpeg&quot;, &quot;images/lumieres fragiles2.jpeg&quot;, &quot;images/lumieres fragiles3.jpeg&quot;, &quot;images/lumieres fragiles4.jpeg&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">LUMIÈRES FRAGILES</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art8" class="lang-text">
+                            <p>Fond lumineux, d'une douceur tel un rayon de soleil en plein hiver<br>
+                            Le paradoxe entre la douceur de mon être et ma tempête émotionnelle<br>
+                            Tout en se souvenant par ces traces noires de mes blessures antérieures<br>
+                            Qui ont fait de moi ce que je suis aujourd'hui</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art8" class="lang-text hidden">
+                            <p>Fons lluminós, amb una suavitat com un raig de sol en ple hivern.<br>
+                            El paradox entre la dolcesa del meu ésser i la meva tempesta emocional,<br>
+                            sense oblidar, a través d'aquestes marques negres, les meves ferides passades<br>
+                            que m'han fet ser qui sóc avui.</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art8" class="lang-text hidden">
+                            <p>Fondo luminoso, con una suavidad como un rayo de sol en pleno invierno.<br>
+                            El contraste entre la ternura de mi ser y mi tormenta emocional,<br>
+                            sin olvidar, a través de esas huellas negras, las heridas del pasado<br>
+                            que me han convertido en quien soy hoy.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art8" class="lang-text hidden">
+                            <p>A luminous background, with a softness like a ray of sunshine in the middle of winter.<br>
+                            The contrast between the gentleness of my being and my emotional storm,<br>
+                            never forgetting, through these black traces, the past wounds<br>
+                            that have made me who I am today.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre FRAGMENT D'ÉMOTION -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/fragment d'émotion.jpg" 
+                     alt="Un fond exprimant le contraste entre mon brouillard intérieur" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/fragment d'émotion.jpg&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">FRAGMENT D'ÉMOTION</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art9" class="lang-text">
+                            <p>Un fond exprimant le contraste entre mon brouillard intérieur relevé par ce gris<br>
+                            Et une explosion de désir s'exposant par ces éclats de couleurs<br>
+                            Tel un besoin d'exister, des pulsions sans cesse de désir et de vivre l'instant présent<br>
+                            Sans jamais oublier, par ces éclaboussures blanches, mon éveil, mon réveil d'être libéré de ces fragments noirs de ma lutte intérieure</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art9" class="lang-text hidden">
+                            <p>Un fons que expressa el contrast entre la meva boira interior, ressaltada per aquest gris,<br>
+                            i una explosió de desig que s'exposa a través d'aquests esclats de colors.<br>
+                            Com una necessitat d'existir, impulsos constants de desig i de viure l'instant present.<br>
+                            Sense oblidar mai, mitjançant aquestes esquitxades blanques, el meu despertar, el meu ressorgir,<br>
+                            alliberant-me d'aquests fragments negres de la meva lluita interior.</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art9" class="lang-text hidden">
+                            <p>Un fondo que expresa el contraste entre mi niebla interior, revelada por ese gris,<br>
+                            y una explosión de deseo que se muestra a través de esos estallidos de color.<br>
+                            Como una necesidad de existir, impulsos constantes de deseo y de vivir el momento presente.<br>
+                            Sin olvidar nunca, a través de esas salpicaduras blancas, mi despertar, mi renacer,<br>
+                            al liberarme de esos fragmentos oscuros de mi lucha interior.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art9" class="lang-text hidden">
+                            <p>A background expressing the contrast between my inner fog, brought out by this grey,<br>
+                            and an outburst of desire revealed through these bursts of colour.<br>
+                            Like a need to exist, a constant drive to feel desire and live in the present moment.<br>
+                            Never forgetting, through these white splashes, my awakening, my rebirth,<br>
+                            freeing myself from those dark fragments of my inner struggle.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre LE MAL ET LE BIEN -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/LE MAL ET LE BIEN.jpg" 
+                     alt="Une guerre qui ne se finira sans aucun doute" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/LE MAL ET LE BIEN.jpg&quot;, &quot;images/LE MAL ET LE BIEN2.JPEG&quot;, &quot;images/LE MAL ET LE BIEN3.JPEG&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">LE MAL ET LE BIEN</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art10" class="lang-text">
+                            <p>Une guerre qui ne se finira sans aucun doute<br>
+                            La peur ou l'envie<br>
+                            L'échec ou la réussite<br>
+                            Le plaisir ou le désir<br>
+                            La tranquillité ou l'interdiction<br>
+                            Toile où nos propres combats et nos propres armes sont à l'intérieur de nous-mêmes</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art10" class="lang-text hidden">
+                            <p>Una guerra que, sens dubte, no s'acabarà mai<br>
+                            La por o l'enveja<br>
+                            El fracàs o l'èxit<br>
+                            El plaer o el desig<br>
+                            La tranquil·litat o la prohibició<br>
+                            Un llenç on les nostres pròpies batalles i les nostres pròpies armes són dins nostre</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art10" class="lang-text hidden">
+                            <p>Una guerra que, sin duda, nunca terminará.<br>
+                            El miedo o la envidia.<br>
+                            El fracaso o el éxito.<br>
+                            El placer o el deseo.<br>
+                            La tranquilidad o la prohibición.<br>
+                            Un lienzo donde nuestras propias batallas y nuestras propias armas<br>
+                            están dentro de nosotros mismos.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art10" class="lang-text hidden">
+                            <p>A war that will undoubtedly never end<br>
+                            Fear or longing<br>
+                            Failure or success<br>
+                            Pleasure or desire<br>
+                            Peace or prohibition<br>
+                            A canvas where our own battles and our own weapons are within ourselves</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et collage</div>
+                </div>
+            </div>
+
+            <!-- Œuvre LA FOLIE -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/la folie.jpeg" 
+                     alt="Toile en coton, peinture abstraite exprimant la folie" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/la folie.jpeg&quot;, &quot;images/la folie 2.jpeg&quot;, &quot;images/la folie 3.jpeg&quot;, &quot;images/la folie 4.jpeg&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">LA FOLIE</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art11" class="lang-text">
+                            <p>Toile en coton 55 x 38,5<br>
+                            Acrylique, bombe acrylique<br><br>
+                            La folie<br>
+                            Peinture abstraite, où éclatement, étalement n'est rien d'autre que mon esprit écorché vif<br>
+                            De la noirceur pour ne jamais oublier ce mal<br>
+                            Décomposition de cette obscurité, vécu par des événements merveilleux exposé par ces fragments de couleurs étalé comme des miracles apparut de nulle part<br><br>
+                            Toile faite par une âme piquante et rayonnante en même temps</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art11" class="lang-text hidden">
+                            <p>Llenç de cotó, acrílic, esprai acrílic, 40 × 40 cm<br>
+                            Pintura abstracta, on l'explosió i l'escampament no són res més que el meu esperit en carn viva.<br>
+                            Foscor, per no oblidar mai aquest dolor.<br>
+                            Descomposició d'aquesta foscor, viscuda a través d'esdeveniments meravellosos, exposada en aquests fragments de color estesos com miracles sorgits del no-res.<br>
+                            Llenç fet per una ànima punyent i radiant alhora.</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art11" class="lang-text hidden">
+                            <p>Lienzo de algodón<br>
+                            Acrílico, spray acrílico, 40 × 40 cm<br>
+                            Pintura abstracta, donde la explosión y el derrame no son otra cosa que mi mente en carne viva.<br>
+                            Oscuridad, para no olvidar nunca ese dolor.<br>
+                            Descomposición de esa oscuridad, vivida a través de acontecimientos maravillosos,<br>
+                            expresados en esos fragmentos de color extendidos como milagros surgidos de la nada.<br>
+                            Un lienzo creado por un alma punzante y luminosa al mismo tiempo.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art11" class="lang-text hidden">
+                            <p>Cotton canvas, acrylic, acrylic spray, 40 × 40 cm<br>
+                            Abstract painting, where the splattering and smearing are nothing but my raw, wounded mind.<br>
+                            Darkness, to never forget that pain.<br>
+                            Decomposition of that darkness, lived through wonderful events, revealed by these fragments of colour spread like miracles that came out of nowhere.<br>
+                            A canvas created by a soul both sharp and radiant at the same time.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique et bombe acrylique</div>
+                </div>
+            </div>
+
+            <!-- Œuvre CICATRICES -->
+            <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <img src="images/Cicatrices.jpg" 
+                     alt="Toiles en coton exprimant les cicatrices intérieures" 
+                     class="w-full h-72 object-cover modal-trigger"
+                     data-images="[&quot;images/Cicatrices.jpg&quot;, &quot;images/cicatrices2.jpeg&quot;]"
+                     data-current="0">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-white mb-3">CICATRICES</h4>
+                    <div class="text-gray-300 text-sm space-y-2">
+                        <!-- Version Française -->
+                        <div id="fr-art12" class="lang-text">
+                            <p>Toiles en coton, 46 x 55<br>
+                            Acrylique, Posca acrylique, bombe acrylique<br><br>
+                            Cicatrices<br>
+                            Rose en arrière plan pour laisser place à un dégradé d'orange, teinté de la dureté de l'amour de soie<br><br>
+                            Des yeux - les miens, dessinés sans aucune perfection - pour rappeler que mon regard de moi est faussé, altéré, erroné et déformé par mes propres jugements<br><br>
+                            Rouge de mal être<br>
+                            Noir de colère<br>
+                            Mais sans jamais abandonner ce fond d'espoir qui me permettra, un jour d'apprendre à aimer mon moi</p>
+                        </div>
+
+                        <!-- Version Catalane -->
+                        <div id="ca-art12" class="lang-text hidden">
+                            <p>Llenços de cotó, 40 × 60 cm<br>
+                            Acrílic, Posca acrílic, esprai acrílic<br>
+                            Cicatrius<br><br>
+                            Rosa de fons per donar pas a un degradat de taronja, tenyit per la duresa de l'amor de seda<br>
+                            Ulls — els meus — dibuixats sense cap perfecció — per recordar que la meva mirada cap a mi mateixa està distorsionada, alterada, equivocada i deformada pels meus propis judicis<br><br>
+                            Vermell de malestar<br>
+                            Negre de ràbia<br>
+                            Però sense abandonar mai aquest fons d'esperança que, algun dia, em permetrà aprendre a estimar el meu jo</p>
+                        </div>
+
+                        <!-- Version Espagnole -->
+                        <div id="es-art12" class="lang-text hidden">
+                            <p>Lienzos de algodón, 40 × 60 cm<br>
+                            Acrílico, Posca acrílico, spray acrílico<br>
+                            Cicatrices<br><br>
+                            Rosa en el fondo, para dar paso a un degradado de naranja, teñido por la dureza del amor de seda.<br>
+                            Unos ojos – los míos – dibujados sin ninguna perfección, para recordar que la mirada que tengo sobre mí misma está distorsionada, alterada, equivocada y deformada por mis propios juicios.<br><br>
+                            Rojo de malestar.<br>
+                            Negro de rabia.<br>
+                            Pero sin abandonar nunca ese fondo de esperanza que, algún día, me permitirá aprender a amar mi yo.</p>
+                        </div>
+
+                        <!-- Version Anglaise -->
+                        <div id="en-art12" class="lang-text hidden">
+                            <p>Cotton canvases, 40 × 60 cm<br>
+                            Acrylic, acrylic Posca, acrylic spray<br><br>
+                            Scars<br>
+                            Pink in the background to give way to a gradient of orange, tinted by the harshness of silky love<br>
+                            Eyes — mine — drawn without any perfection — to remind that my self-perception is distorted, altered, mistaken, and warped by my own judgments<br><br>
+                            Red of unease<br>
+                            Black of anger<br>
+                            But never letting go of that underlying hope that, one day, will allow me to learn to love my self</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-purple-400 font-medium">Technique mixte : acrylique, Posca et bombe acrylique</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Section Contact -->
+    <section id="contact" class="bg-gray-900 text-white py-16">
+        <div class="max-w-4xl mx-auto px-4">
+            <h3 class="text-2xl font-bold mb-8 text-center">Contactez-moi E-mail temmamesther@gmail.com </h3>
+    
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+           
+            <p>&copy; 2024 ESTHER THEMAM</p>
+        </div>
+    </footer>
+
+    <!-- Script de gestion des langues -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des langues
+            const languageManager = {
+                init() {
+                    this.buttons = document.querySelectorAll('.lang-btn');
+                    this.setupEventListeners();
+                    this.setDefaultLanguage();
+                },
+
+                setupEventListeners() {
+                    this.buttons.forEach(button => {
+                        button.addEventListener('click', () => this.changeLang(button.dataset.lang));
+                    });
+                },
+
+                changeLang(lang) {
+                    // Mise à jour des boutons
+                    this.buttons.forEach(btn => {
+                        btn.classList.remove('bg-opacity-75', 'ring-2', 'ring-current', 'active-lang');
+                        if (btn.dataset.lang === lang) {
+                            btn.classList.add('bg-opacity-75', 'ring-2', 'ring-current', 'active-lang');
+                        }
+                    });
+
+                    // Mise à jour du contenu
+                    document.querySelectorAll('.lang-text').forEach(text => {
+                        if (text.id === lang || text.id.startsWith(lang + '-art')) {
+                            text.classList.remove('hidden');
+                        } else {
+                            text.classList.add('hidden');
+                        }
+                    });
+
+                    // Sauvegarder la préférence
+                    localStorage.setItem('preferredLanguage', lang);
+                },
+
+                setDefaultLanguage() {
+                    const savedLang = localStorage.getItem('preferredLanguage') || 'fr';
+                    this.changeLang(savedLang);
+                }
+            };
+
+            // Gestion du formulaire
+            const formManager = {
+                init() {
+                    this.form = document.getElementById('contactForm');
+                    this.submitButton = document.getElementById('submit-button');
+                    this.setupValidation();
+                },
+
+                setupValidation() {
+                    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                    this.form.querySelectorAll('input, textarea').forEach(field => {
+                        field.addEventListener('input', () => this.validateField(field));
+                    });
+                },
+
+                validateField(field) {
+                    const errorElement = document.getElementById(`${field.id}-error`);
+                    let isValid = field.checkValidity();
+                    let errorMessage = '';
+
+                    if (!isValid) {
+                        if (field.validity.valueMissing) {
+                            errorMessage = 'Ce champ est requis';
+                        } else if (field.validity.typeMismatch && field.type === 'email') {
+                            errorMessage = 'Veuillez entrer une adresse email valide';
+                        } else if (field.validity.tooShort) {
+                            errorMessage = `Minimum ${field.minLength} caractères requis`;
+                        }
+                    }
+
+                    errorElement.textContent = errorMessage;
+                    errorElement.classList.toggle('hidden', isValid);
+                    return isValid;
+                },
+
+                async handleSubmit(e) {
+                    e.preventDefault();
+
+                    const isValid = Array.from(this.form.elements).every(field =>
+                        field.tagName === 'BUTTON' || this.validateField(field)
+                    );
+
+                    if (!isValid) return;
+
+                    this.submitButton.disabled = true;
+
+                    try {
+                        // Simuler l'envoi du formulaire
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        this.form.reset();
+                        alert('Message envoyé avec succès !');
+                    } catch (error) {
+                        alert('Une erreur est survenue. Veuillez réessayer.');
+                    } finally {
+                        this.submitButton.disabled = false;
+                    }
+                }
+            };
+
+            // Initialisation
+            languageManager.init();
+            formManager.init();
+        });
+    </script>
+
+    <!-- Modification du modal -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <button class="modal-nav prev" id="prevButton">&#10094;</button>
+        <button class="modal-nav next" id="nextButton">&#10095;</button>
+        <div class="modal-content">
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="modal-dots"></div>
+        </div>
+    </div>
+
+    <!-- Mise à jour du script pour le modal -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.getElementsByClassName('close')[0];
+        const prevBtn = document.getElementById('prevButton');
+        const nextBtn = document.getElementById('nextButton');
+        const modalTriggers = document.querySelectorAll('.modal-trigger');
+        
+        let currentImageIndex = 0;
+        let currentImages = [];
+
+        function updateDots() {
+            const dotsContainer = modal.querySelector('.modal-dots');
+            dotsContainer.innerHTML = '';
+            currentImages.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${index === currentImageIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => showImage(index));
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function showImage(index) {
+            currentImageIndex = index;
+            modalImg.src = currentImages[index];
+            updateDots();
+        }
+
+        modalTriggers.forEach(img => {
+            img.addEventListener('click', function() {
+                currentImages = JSON.parse(this.getAttribute('data-images'));
+                currentImageIndex = 0;
+                modal.style.display = 'block';
+                showImage(currentImageIndex);
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+            showImage(currentImageIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            showImage(currentImageIndex);
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (modal.style.display === 'block') {
+                if (e.key === 'Escape') {
+                    closeModal();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>
+
