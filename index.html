@@ -17,13 +17,82 @@
     <link rel="stylesheet" href="/styles/main.css">
     <style>
         .artwork-card {
-            transition: all 0.3s ease;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            backface-visibility: hidden;
+        }
+        .artwork-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.25) 0%, rgba(219, 39, 119, 0.25) 100%);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+        }
+        .artwork-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #ec4899, #f472b6);
+            transform: translateY(-5px);
+            opacity: 0;
+            transition: all 0.5s ease;
         }
         .artwork-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(to bottom right, #2d3748, #4a5568);
+            transform: translateY(-20px) scale(1.05);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 30px rgba(219, 39, 119, 0.3);
+            background: linear-gradient(to bottom right, #1a1c2c, #4a5568);
+            z-index: 5;
         }
+        .artwork-card:hover::before {
+            opacity: 1;
+        }
+        .artwork-card:hover::after {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .artwork-card img {
+            transition: all 0.5s ease;
+            filter: brightness(0.9) contrast(1.1);
+        }
+        .artwork-card:hover img {
+            filter: brightness(1.1) contrast(1.15) saturate(1.15);
+            transform: scale(1.03);
+        }
+        .artwork-card h4 {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .artwork-card:hover h4 {
+            transform: scale(1.05);
+            color: #a78bfa;
+            text-shadow: 0 0 8px rgba(167, 139, 250, 0.5);
+        }
+        .artwork-card:hover h4::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(to right, #a78bfa, transparent);
+            animation: lineGrow 0.5s forwards;
+        }
+        
+        @keyframes lineGrow {
+            from { width: 0; }
+            to { width: 50%; }
+        }
+        
         .lang-text p {
             line-height: 1.7;
             letter-spacing: 0.03em;
@@ -61,6 +130,13 @@
             max-width: 100%;
             max-height: 85vh;
             object-fit: contain;
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-image.zoomed {
+            transform: scale(1.5);
+            cursor: zoom-out;
         }
 
         .close {
@@ -71,6 +147,7 @@
             font-size: 40px;
             font-weight: bold;
             cursor: pointer;
+            z-index: 1002;
         }
 
         .artwork-card img {
@@ -86,19 +163,22 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 16px;
-            font-size: 24px;
+            padding: 20px;
+            font-size: 30px;
             font-weight: bold;
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
             z-index: 1001;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .modal-nav:hover {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .prev {
@@ -115,20 +195,37 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
         }
 
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .dot:hover {
+            transform: scale(1.2);
         }
 
         .dot.active {
             background: white;
+            border: 2px solid #ff5500;
+            transform: scale(1.2);
+        }
+        
+        .image-loading-error {
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            padding: 20px;
         }
 
         @keyframes fadeInSlide {
@@ -453,10 +550,10 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Œuvre ESTHER -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/estherzz.JPG" 
+                <img src="images/esther1.JPG" 
                      alt="Visage fragmenté en noir et rouge, représentant des émotions intenses" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images='["images/esther.jpg", "images/esther2.jpg", "images/estherzz.JPG"]'
+                     data-images='["images/esther1.JPG", "images/esther2.JPG", "images/esther3.JPG", "images/esther4.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">ESTHER</h4>
@@ -532,10 +629,10 @@
 
             <!-- Œuvre L'INCONNU -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/l'incconu.JPEG" 
+                <img src="images/l'inconnu1.JPG" 
                      alt="Toile représentant un point d'interrogation symbolisant les questions intérieures" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/l'incconu.JPEG&quot;, &quot;images/l'inconnu2.JPEG&quot;, &quot;images/l'inconnu3.JPEG&quot;]"
+                     data-images='["images/l\'inconnu1.JPG", "images/l\'inconnu2.JPG", "images/l\'inconnu3.JPG", "images/l\'inconnu4.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">L'INCONNU </h4>
@@ -589,10 +686,10 @@
 
             <!-- Œuvre LARMES À NU -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/WhatsApp Image 2025-03-28 at 09.52.51 (3).jpeg" 
+                <img src="images/larme a nu1.JPG" 
                      alt="Regard prisonnier par des cadres" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/WhatsApp Image 2025-03-28 at 09.52.51 (3).jpeg&quot;, &quot;images/l'armes à nu2.JPEG&quot;, &quot;images/l'arme à nu3.JPEG&quot;]"
+                     data-images='["images/larme a nu1.JPG", "images/larme a nu2.JPG", "images/larme a nu3.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">LARMES À NU</h4>
@@ -652,10 +749,10 @@
 
             <!-- Œuvre L'INTIME -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/l'intime2.jpg" 
+                <img src="images/l'intime1.JPG" 
                      alt="Un besoin de dynamisme, un tourbillon de couleurs" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/l'intime2.jpg&quot;, &quot;images/l'intime 3.JPEG&quot;]"
+                     data-images='["images/l\'intime1.JPG", "images/l\'intime.jpg", "images/l\'intime3.JPG", "images/l\'intime4.JPG", "images/l\'intime2.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">L'INTIME</h4>
@@ -700,10 +797,10 @@
 
             <!-- Œuvre LE CRI -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/Le Cri.jpg" 
+                <img src="images/le ciel1.JPG" 
                      alt="Griffure tel mes hurlements en moi" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/Le Cri.jpg&quot;, &quot;images/le cri2.JPEG&quot;, &quot;images/le cri 3.JPEG&quot;]"
+                     data-images='["images/le ciel1.JPG", "images/le ciel2.JPG", "images/le ciel3.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">LE CRI</h4>
@@ -749,10 +846,10 @@
 
             <!-- Œuvre L'ESPÉRANCE -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/esperance2.jpeg" 
+                <img src="images/esperance.JPG" 
                      alt="Toile où chaque mouvement était le trop-plein de mes émotions" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/esperance2.jpeg&quot;, &quot;images/esperance3.jpeg&quot;, &quot;images/esperance4.jpeg&quot;]"
+                     data-images='["images/esperance.JPG", "images/esperance2.jpeg", "images/esperance3.jpeg", "images/esperance4.jpeg"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">L'ESPÉRANCE</h4>
@@ -809,10 +906,10 @@
 
             <!-- Œuvre LUMIÈRES FRAGILES -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/lumieres fragiles1.jpeg" 
+                <img src="images/lumiere fragile.JPG" 
                      alt="Fond lumineux, d'une douceur tel un rayon de soleil en plein hiver" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/lumieres fragiles1.jpeg&quot;, &quot;images/lumieres fragiles2.jpeg&quot;, &quot;images/lumieres fragiles3.jpeg&quot;, &quot;images/lumieres fragiles4.jpeg&quot;]"
+                     data-images='["images/lumiere fragile.JPG", "images/lumiere fragile2.JPG", "images/lumiere fragile3.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">LUMIÈRES FRAGILES</h4>
@@ -857,10 +954,10 @@
 
             <!-- Œuvre FRAGMENT D'ÉMOTION -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/fragment d'emotion1.jpeg" 
+                <img src="images/fragment d'emotion1.JPG" 
                      alt="Un fond exprimant le contraste entre mon brouillard intérieur" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images='["images/fragment d%27emotion1.jpeg", "images/fragment d%27emotion2.jpeg", "images/fragment d%27emotion3.jpeg"]'
+                     data-images='["images/fragment d\'emotion1.JPG", "images/fragment d\'emotion3.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">FRAGMENT D'ÉMOTION</h4>
@@ -909,10 +1006,10 @@
 
             <!-- Œuvre LE MAL ET LE BIEN -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/LE MAL ET LE BIEN.jpg" 
+                <img src="images/mal2.jpeg" 
                      alt="Une guerre qui ne se finira sans aucun doute" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/LE MAL ET LE BIEN.jpg&quot;, &quot;images/LE MAL ET LE BIEN2.JPEG&quot;, &quot;images/LE MAL ET LE BIEN3.JPEG&quot;]"
+                     data-images='["images/mal2.jpeg", "images/mal3.jpeg", "images/mal3.JPG", "images/mal4.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">LE MAL ET LE BIEN</h4>
@@ -967,10 +1064,10 @@
 
             <!-- Œuvre LA FOLIE -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/la folie.jpeg" 
+                <img src="images/fiolie1.JPG" 
                      alt="Toile en coton, peinture abstraite exprimant la folie" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images="[&quot;images/la folie.jpeg&quot;, &quot;images/la folie 2.jpeg&quot;, &quot;images/la folie 3.jpeg&quot;, &quot;images/la folie 4.jpeg&quot;]"
+                     data-images='["images/fiolie1.JPG", "images/fiolie2.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">LA FOLIE</h4>
@@ -1022,10 +1119,10 @@
 
             <!-- Œuvre CICATRICES -->
             <div class="artwork-card bg-gray-800 rounded-lg shadow-md overflow-hidden">
-                <img src="images/cicatrices2.jpeg" 
+                <img src="images/cicatrices.JPG" 
                      alt="Toiles en coton exprimant les cicatrices intérieures" 
                      class="w-full h-72 object-cover modal-trigger"
-                     data-images='["images/cicatrices2.jpeg", "images/Cicatrices.jpg"]'
+                     data-images='["images/cicatrices.JPG", "images/cicatrices2.JPG", "images/cicatrices3.JPG", "images/cicatrices4.JPG"]'
                      data-current="0">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-white mb-3">CICATRICES</h4>
@@ -1233,10 +1330,23 @@
         
         let currentImageIndex = 0;
         let currentImages = [];
+        let isZoomed = false;
 
         function updateDots() {
             const dotsContainer = modal.querySelector('.modal-dots');
             dotsContainer.innerHTML = '';
+            
+            // Ajouter un indicateur de position
+            if (currentImages.length > 1) {
+                const indicator = document.createElement('div');
+                indicator.style.color = 'white';
+                indicator.style.marginRight = '10px';
+                indicator.style.fontSize = '14px';
+                indicator.textContent = `Image ${currentImageIndex + 1}/${currentImages.length}`;
+                dotsContainer.appendChild(indicator);
+            }
+            
+            // Créer les points pour chaque image
             currentImages.forEach((_, index) => {
                 const dot = document.createElement('div');
                 dot.className = `dot ${index === currentImageIndex ? 'active' : ''}`;
@@ -1246,34 +1356,155 @@
         }
 
         function showImage(index) {
+            if (currentImages.length === 0) return;
+            
             currentImageIndex = index;
-            modalImg.src = currentImages[index];
+            isZoomed = false;
+            modalImg.classList.remove('zoomed');
+            
+            // Afficher un message de chargement ou une animation
+            modalImg.style.opacity = '0.5';
+            
+            // Masquer d'éventuels messages d'erreur précédents
+            const modalContent = modal.querySelector('.modal-content');
+            const existingErrorMsg = modalContent.querySelector('.image-loading-error');
+            if (existingErrorMsg) {
+                existingErrorMsg.style.display = 'none';
+            }
+            
+            // S'assurer que l'URL de l'image est correctement encodée
+            const imageUrl = currentImages[index];
+            const encodedUrl = imageUrl.includes(' ') ? encodeURI(imageUrl) : imageUrl;
+            
+            console.log(`Chargement de l'image: ${encodedUrl} (${index + 1}/${currentImages.length})`);
+            
+            // Mettre à jour la visibilité des boutons de navigation
+            prevBtn.style.display = currentImages.length > 1 ? 'block' : 'none';
+            nextBtn.style.display = currentImages.length > 1 ? 'block' : 'none';
+            
+            // Vérifier si l'image existe avant de l'afficher
+            const img = new Image();
+            
+            // Définir un timeout pour ne pas attendre indéfiniment
+            const timeoutId = setTimeout(() => {
+                console.error(`Timeout lors du chargement de l'image: ${encodedUrl}`);
+                handleImageError(`Le chargement de l'image a pris trop de temps.`);
+            }, 5000); // 5 secondes max
+            
+            img.onload = function() {
+                clearTimeout(timeoutId);
+                modalImg.src = encodedUrl;
+                modalImg.style.opacity = '1';
+                modalImg.alt = `Vue ${index + 1} de l'œuvre`;
+            };
+            
+            img.onerror = function() {
+                clearTimeout(timeoutId);
+                handleImageError(`Impossible de charger l'image: ${imageUrl.split('/').pop()}`);
+            };
+            
+            function handleImageError(errorMessage) {
+                console.error(errorMessage);
+                modalImg.src = ''; // Effacer l'image précédente
+                modalImg.style.opacity = '1';
+                
+                // Afficher un message d'erreur
+                let errorMsg = modalContent.querySelector('.image-loading-error');
+                
+                if (!errorMsg) {
+                    errorMsg = document.createElement('div');
+                    errorMsg.className = 'image-loading-error';
+                    modalContent.appendChild(errorMsg);
+                }
+                
+                errorMsg.textContent = errorMessage;
+                errorMsg.style.display = 'block';
+            }
+            
+            img.src = encodedUrl;
             updateDots();
         }
 
+        // Ajouter la fonctionnalité de zoom sur l'image
+        modalImg.addEventListener('click', function() {
+            isZoomed = !isZoomed;
+            if (isZoomed) {
+                this.classList.add('zoomed');
+            } else {
+                this.classList.remove('zoomed');
+            }
+        });
+
         modalTriggers.forEach(img => {
             img.addEventListener('click', function() {
-                currentImages = JSON.parse(this.getAttribute('data-images'));
-                currentImageIndex = 0;
-                modal.style.display = 'block';
-                showImage(currentImageIndex);
-                document.body.style.overflow = 'hidden';
+                try {
+                    // Récupérer et nettoyer l'attribut data-images
+                    const rawData = this.getAttribute('data-images');
+                    console.log('Données brutes:', rawData);
+                    
+                    let parsedImages;
+                    
+                    try {
+                        parsedImages = JSON.parse(rawData);
+                        console.log('Images parsées:', parsedImages);
+                    } catch (jsonError) {
+                        // En cas d'erreur de parsing JSON, tentative de correction
+                        console.error('Erreur lors du parsing JSON:', jsonError);
+                        
+                        // Alternative : utiliser une seule image (celle de l'aperçu)
+                        parsedImages = [this.getAttribute('src')];
+                        console.log('Utilisation de l\'image d\'aperçu comme fallback:', parsedImages);
+                    }
+                    
+                    // Vérifier que currentImages est un tableau non vide
+                    if (!Array.isArray(parsedImages) || parsedImages.length === 0) {
+                        throw new Error('Format de données invalide');
+                    }
+                    
+                    // Filtrer les images invalides ou inexistantes
+                    currentImages = parsedImages;
+                    console.log(`Nombre d'images à afficher: ${currentImages.length}`);
+                    
+                    // Masquer tout message d'erreur précédent
+                    const errorMsg = modal.querySelector('.image-loading-error');
+                    if (errorMsg) {
+                        errorMsg.style.display = 'none';
+                    }
+                    
+                    currentImageIndex = 0;
+                    modal.style.display = 'block';
+                    showImage(currentImageIndex);
+                    document.body.style.overflow = 'hidden';
+                } catch (error) {
+                    console.error('Erreur lors du traitement des images:', error);
+                    alert('Désolé, une erreur est survenue lors du chargement des images: ' + error.message);
+                }
             });
         });
 
         prevBtn.addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
-            showImage(currentImageIndex);
+            if (currentImages.length > 1) {
+                isZoomed = false;
+                modalImg.classList.remove('zoomed');
+                currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+                showImage(currentImageIndex);
+            }
         });
 
         nextBtn.addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
-            showImage(currentImageIndex);
+            if (currentImages.length > 1) {
+                isZoomed = false;
+                modalImg.classList.remove('zoomed');
+                currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+                showImage(currentImageIndex);
+            }
         });
 
         function closeModal() {
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
+            isZoomed = false;
+            modalImg.classList.remove('zoomed');
         }
 
         closeBtn.addEventListener('click', closeModal);
@@ -1291,6 +1522,15 @@
                     prevBtn.click();
                 } else if (e.key === 'ArrowRight') {
                     nextBtn.click();
+                } else if (e.key === ' ' || e.key === 'Enter') {
+                    // Permettre au clavier de zoomer/dézoomer avec la barre d'espace ou Entrée
+                    isZoomed = !isZoomed;
+                    if (isZoomed) {
+                        modalImg.classList.add('zoomed');
+                    } else {
+                        modalImg.classList.remove('zoomed');
+                    }
+                    e.preventDefault();
                 }
             }
         });
